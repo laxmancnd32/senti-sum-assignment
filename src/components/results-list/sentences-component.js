@@ -1,6 +1,7 @@
 import React from 'react';
-import Loader from '../../loader-component';
-import SentencesTable from './sentences-table-component';
+import Loader from '../loader-component';
+import SentencesTable from './components/sentences-table-component';
+import './sentences.scss';
 
 const Sentences = props => {
     const { sentences, isLoading } = props;

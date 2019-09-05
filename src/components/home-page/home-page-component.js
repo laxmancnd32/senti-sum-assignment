@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { orderBy } from 'lodash/collection';
 import SearchBar from '../search-bar';
-import ResultsListing from '../results-list';
+import { Tabs, Tab } from 'react-bootstrap';
+import TopFeatures from '../results-list/top-features-component';
+import Sentences from '../results-list/sentences-component';
+import { ButtonGroup, Button } from 'react-bootstrap';
 import { fetchSearchDetails } from '../../service';
 import { BASE_URL } from '../../app-constants';
 import './home-page.scss';
@@ -69,11 +72,26 @@ class HomePage extends Component {
                 <hr className="horizontal-seperator" />
                 <div className="row">
                     <div className="col">
-                        <ResultsListing 
-                            isLoading={isLoading}
-                            sentences={sentences}
-                            topFeatures={topFeatures}
-                        />
+                    <Tabs defaultActiveKey="top-features" transition={false} id="noanim-tab-example">
+                        <Tab eventKey="top-features" title="Top features">
+                            <TopFeatures 
+                                topFeatures={topFeatures}
+                                isLoading={isLoading}
+                            />
+                        </Tab>
+                        <Tab eventKey="sentences" title="Sentences">
+                            <Sentences 
+                                sentences={sentences}
+                                isLoading={isLoading}
+                            />
+                            <ButtonGroup className="pagination-group">
+                                <Button>First page</Button>
+                                <Button>Previous page</Button>
+                                <Button>Next page</Button>
+                                <Button>Last page</Button>
+                            </ButtonGroup>
+                        </Tab>
+                    </Tabs>
                     </div>
                 </div>
             </div>

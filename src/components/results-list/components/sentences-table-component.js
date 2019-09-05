@@ -1,6 +1,6 @@
 import React from 'react';
 import NoResultsFound from './no-results-found';
-import { Table, ButtonGroup, Button } from 'react-bootstrap';
+import { Table } from 'react-bootstrap';
 
 const SentencesTable = props => {
     const { sentences = [] } = props;
@@ -31,12 +31,6 @@ const SentencesTable = props => {
                     }
                 </tbody>
             </Table>
-            <ButtonGroup className="pagination-group">
-                <Button variant="secondary">First page</Button>
-                <Button variant="secondary">Previous page</Button>
-                <Button variant="secondary">Next page</Button>
-                <Button variant="secondary">Last page</Button>
-            </ButtonGroup>
         </div>
     );
 }
