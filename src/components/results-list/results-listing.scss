@@ -1,0 +1,11 @@
+.results-listing {
+    display: flex;
+    .top-features {
+        flex: 1;
+        border: 1px solid grey;
+    }
+    .sentences {
+        flex: 1;
+        border: 1px solid grey;
+    }
+}
