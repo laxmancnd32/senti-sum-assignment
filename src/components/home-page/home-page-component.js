@@ -4,7 +4,6 @@ import SearchBar from '../search-bar';
 import { Tabs, Tab } from 'react-bootstrap';
 import TopFeatures from '../results-list/top-features-component';
 import Sentences from '../results-list/sentences-component';
-import { ButtonGroup, Button } from 'react-bootstrap';
 import { fetchSearchDetails } from '../../service';
 import { BASE_URL } from '../../app-constants';
 import './home-page.scss';
@@ -84,12 +83,12 @@ class HomePage extends Component {
                                 sentences={sentences}
                                 isLoading={isLoading}
                             />
-                            <ButtonGroup className="pagination-group">
-                                <Button>First page</Button>
-                                <Button>Previous page</Button>
-                                <Button>Next page</Button>
-                                <Button>Last page</Button>
-                            </ButtonGroup>
+                            <div className="pagination-group">
+                                <button>First page</button>
+                                <button>Previous page</button>
+                                <button>Next page</button>
+                                <button>Last page</button>
+                            </div>
                         </Tab>
                     </Tabs>
                     </div>
