@@ -1,6 +1,7 @@
 .results-listing {
     display: flex;
     min-height: 10rem;
+    margin-bottom: 2rem;
     .top-features {
         flex: 1;
         border: 1px solid grey;
@@ -22,8 +23,7 @@
             }
         }
         .pagination-group {
-            left: 15%;
-            top: -6px;
+            width:100%
         }
     }
 }
