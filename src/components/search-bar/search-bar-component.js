@@ -11,10 +11,8 @@ const SearchBar = props => {
         <div className='search-bar'>
             <InputGroup>
                 <FormControl
-                    placeholder="Search Repos"
-                    aria-label="Job"
-                    aria-describedby="basic-addon1"
-                    onChange={queryText => handleInputChange(queryText)}
+                    placeholder="Search sentence"
+                    onChange={event => handleInputChange(event)}
                     onKeyPress={ event => event.charCode === 13 && handleSearchTrigger() }
                 />
                 <Button onClick={handleSearchTrigger}>
