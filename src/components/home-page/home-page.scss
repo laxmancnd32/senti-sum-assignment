@@ -8,12 +8,23 @@
         width: 100%;
     }
     .pagination-group {
-        display: flex;
-        justify-content: center;
-        margin: 1rem 0;
-        button {
-            color: #007bff;
+        margin: 1rem 0 1rem 40%;
+        button { color: #007bff; }
+        .page-link {
+            cursor: pointer;
         }
+    }
+    .sentence-count {
+        margin: 1rem 0 !important;
+    }
+    .paginated-sentence-count {
+        float: left;
+    }
+    .top-features-count {
+        margin: 1rem 0;
+    }
+    .sentences-tab {
+        position: relative;
     }
 }
 

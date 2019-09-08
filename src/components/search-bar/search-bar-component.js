@@ -11,7 +11,7 @@ const SearchBar = props => {
         <div className='search-bar'>
             <InputGroup>
                 <FormControl
-                    placeholder="Search sentence"
+                    placeholder="Type a word"
                     onChange={event => handleInputChange(event)}
                     onKeyPress={ event => event.charCode === 13 && handleSearchTrigger() }
                 />

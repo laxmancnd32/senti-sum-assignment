@@ -2,20 +2,25 @@ import React, { Component } from 'react';
 import { orderBy } from 'lodash/collection';
 import SearchBar from '../search-bar';
 import { Tabs, Tab } from 'react-bootstrap';
-import TopFeatures from '../results-list/top-features-component';
-import Sentences from '../results-list/sentences-component';
+import TopFeatures from '../results-tab/top-features-component';
+import Sentences from '../results-tab/sentences-component';
+import PaginationButtons from './pagination-buttons';
 import { fetchSearchDetails } from '../../service';
 import { BASE_URL } from '../../app-constants';
 import './home-page.scss';
 
 class HomePage extends Component {
-    state = { isLoading: true, queryText: 'hello', sentences: [], topFeatures: [], numberOfPages: 1 };
+    state = { isLoading: true, queryText: 'hello',
+              sentences: [], topFeatures: [], numberOfPages: 1,
+              paginationButtons: ['First', 'Previous', 'Next', 'Last'],
+              activePage: 'First', activePageNo: 0
+            };
 
     componentDidMount() {
-        this.callSearchAPI();
+        this._callSearchAPI();
     }
 
-    formatAndSortTopFeatures = topFeatures => {
+    _formatAndSortTopFeatures = topFeatures => {
         const topFeaturesList = Object.keys(topFeatures).map(key => {
             return {
                 featureString: key,
@@ -27,70 +32,103 @@ class HomePage extends Component {
         return sortedTopFeatures;
     };
 
-    formatSentences = sentences => {
-        const sentenceList = Object.keys(sentences).map(sentence => sentence);
+    _formatSentences = sentences => {
+        const sentenceList = Object.keys(sentences).map((sentence, index) => {
+            return { key: index, value: sentence};
+        });
 
         return sentenceList;
     };
 
-    callSearchAPI = () => {
+    _callSearchAPI = () => {
         const { queryText } = this.state;
         fetchSearchDetails(BASE_URL, queryText).then(data=>{
             const { sentences = {}, topFeatures = {} } = data;
-            const sortedTopFeatures = this.formatAndSortTopFeatures(topFeatures);
-            const formattedSentences = this.formatSentences(sentences);
+            const sortedTopFeatures = this._formatAndSortTopFeatures(topFeatures);
+            const formattedSentences = this._formatSentences(sentences);
             const numberOfPages = Math.ceil(formattedSentences.length/30);
             this.setState({ sentences: formattedSentences, topFeatures: sortedTopFeatures, isLoading: false, numberOfPages });
         });
     };
 
-    handleInputChange = event => {
+    _handleInputChange = event => {
         const queryText = event.target.value;
 
         this.setState({ queryText });
     };
 
-    handleSearchTrigger = () => {
+    _handleSearchTrigger = () => {
         this.setState({ isLoading: true });
-        this.callSearchAPI();
+        this._callSearchAPI();
+    };
+
+    _handlePagination = (activePageNo, activePage) => {
+        let currentPage = activePage;
+        if(activePageNo === 0) {
+            currentPage = 'First';
+        } else if(activePageNo === this.state.numberOfPages - 1) {
+            currentPage = 'Last';
+        }
+        this.setState({activePage: currentPage, activePageNo});
+    };
+
+    _getPaginatedData = () => {
+        const { activePageNo, sentences } = this.state;
+        let startIndex = 0;
+        if(activePageNo > 0) {
+            startIndex = activePageNo*30;
+        }
+        const endIndex = startIndex+30;
+        const paginatedSentences = sentences.slice(startIndex,endIndex);
+
+        return paginatedSentences;
     };
 
     render() {
-        const { isLoading, sentences, topFeatures } = this.state;
+        const { isLoading, sentences, topFeatures, activePage, activePageNo, numberOfPages } = this.state;
+        const paginatedSentences = numberOfPages > 1 ? this._getPaginatedData() : sentences;
+        const paginationComponent = numberOfPages > 1
+                                    ? <PaginationButtons
+                                        activePage={activePage}
+                                        activePageNo={activePageNo}
+                                        numberOfPages={numberOfPages}
+                                        handlePagination={this._handlePagination}
+                                    />
+                                    : null;
+        const sentenceCountClass = numberOfPages > 1
+                                    ? 'paginated-sentence-count'
+                                    : 'sentence-count';
 
         return (
             <div className='home-page container'>
                 <div className="row">
                     <div className="col">
                         <SearchBar
-                            handleInputChange={this.handleInputChange}
-                            handleSearchTrigger={this.handleSearchTrigger}
+                            handleInputChange={this._handleInputChange}
+                            handleSearchTrigger={this._handleSearchTrigger}
                         />
                     </div>
                 </div>
                 <hr className="horizontal-seperator" />
                 <div className="row">
                     <div className="col">
-                    <Tabs defaultActiveKey="top-features" transition={false} id="noanim-tab-example">
-                        <Tab eventKey="top-features" title="Top features">
-                            <TopFeatures 
-                                topFeatures={topFeatures}
-                                isLoading={isLoading}
-                            />
-                        </Tab>
-                        <Tab eventKey="sentences" title="Sentences">
-                            <Sentences 
-                                sentences={sentences}
-                                isLoading={isLoading}
-                            />
-                            <div className="pagination-group">
-                                <button>First page</button>
-                                <button>Previous page</button>
-                                <button>Next page</button>
-                                <button>Last page</button>
-                            </div>
-                        </Tab>
-                    </Tabs>
+                        <Tabs defaultActiveKey="top-features" transition={false} id="noanim-tab-example">
+                            <Tab eventKey="top-features" title="Top features">
+                                <div className="top-features-count">{`${topFeatures.length} Top Features found`}</div>
+                                <TopFeatures 
+                                    topFeatures={topFeatures}
+                                    isLoading={isLoading}
+                                />
+                            </Tab>
+                            <Tab eventKey="sentences" title="Sentences" className="sentences-tab">
+                                <div className={sentenceCountClass}>{`${sentences.length} Sentences found`}</div>
+                                {paginationComponent}
+                                <Sentences 
+                                    sentences={paginatedSentences}
+                                    isLoading={isLoading}
+                                />
+                            </Tab>
+                        </Tabs>
                     </div>
                 </div>
             </div>

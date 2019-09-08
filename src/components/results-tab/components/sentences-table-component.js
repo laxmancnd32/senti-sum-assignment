@@ -20,11 +20,12 @@ const SentencesTable = props => {
                 </thead>
                 <tbody>
                     {
-                        sentences.map((sentence,index) => {
+                        sentences.map(sentence => {
+                            const { key, value } = sentence;
                             return (
-                                <tr key={index}>
-                                    <td>{index+1}</td>
-                                    <td>{sentence}</td>
+                                <tr key={key}>
+                                    <td>{key+1}</td>
+                                    <td>{value}</td>
                                 </tr>
                             );
                         })
